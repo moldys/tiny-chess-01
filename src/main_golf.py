@@ -178,7 +178,6 @@ def q(s,b):
    m.append((f,t,pr))
  m.sort(key=lambda x:-V[abs(b.b[x[1]])]);m=m[:8]
  for f,t,pr in m:
-  if time.time()-s.t0>s.tl:return z
   b.m((f,t,pr))
   if b.ck(-b.t):b.u();continue
   w=-q1(s,b)
@@ -194,7 +193,6 @@ def q1(s,b):
   C.append((f,t,pr))
  C.sort(key=lambda x:-V[abs(b.b[x[1]])]);C=C[:8]
  for f,t,pr in C:
-  if time.time()-s.t0>s.tl:return z
   b.m((f,t,pr))
   if b.ck(-b.t):b.u();continue
   w=-x(b)
@@ -202,7 +200,7 @@ def q1(s,b):
   b.u()
  return z
 class E:
- def __init__(s,bu=50000,dp=5,tl=7):s.bu=bu;s.d=dp;s.n=0;s.k=[0]*12;s.tl=tl;s.h=[[0]*64 for _ in range(64)];s.pv=[0]*12
+ def __init__(s,bu=60000,dp=5,tl=7):s.bu=bu;s.d=dp;s.n=0;s.k=[0]*12;s.tl=tl;s.h=[[0]*64 for _ in range(64)];s.pv=[0]*12
  def o(s,b,mv,d):
   L=[]
   for f,t,pr in mv:
@@ -217,7 +215,7 @@ class E:
   L.sort();return[m for _,m in L]
  def s(s,b,d,a,be):
   s.n+=1
-  if s.n>s.bu or time.time()-s.t0>s.tl:return x(b)
+  if s.n>s.bu:return x(b)
   if b.ck():d+=1
   mv=b.g()
   if not mv:return -30000+(s.d-d) if b.ck() else 0
@@ -281,5 +279,5 @@ def run(url,e):
    g=json.load(U.urlopen(U.Request(url+'/move',data=json.dumps({'game':g['game'],'move':e.q(mv)}).encode(),headers=H)))
   if g['status']=='done':break
 if __name__=='__main__':
- e=E(int(os.environ.get('ENGINE_BUDGET','30000')),int(os.environ.get('ENGINE_DEPTH','5')))
+ e=E(int(os.environ.get('ENGINE_BUDGET','60000')),int(os.environ.get('ENGINE_DEPTH','5')))
  run(os.environ['MAKEFUN_ENV_URL'],e)
