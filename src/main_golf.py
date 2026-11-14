@@ -10,7 +10,7 @@ Design notes (v2):
 - Evaluation is material-only (V) to stay inside the 4096-byte cap; no tablebase.
 - En passant capture is handled via the s.e square; castle rights via s.c bits.
 """
-import os,json,urllib.request as U
+import os,time,json,urllib.request as U
 V=(0,100,320,330,500,900,20000);N=(-17,-15,-10,-6,6,10,15,17)
 class B:
  def __init__(s,f=None):
@@ -144,19 +144,15 @@ def x(s):
    w=V[3]+PB[q]
    if v>0:Ba+=1
    else:Bb+=1
-  elif p==4:w=V[4]+PR[q]
+  elif p==4:
+   w=V[4]+PR[q]
+   f=i%8
+   if all(abs(s.b[f+k*8])!=1 for k in range(8)):w+=15 if v>0 else -15
   elif p==5:w=V[5]+PQ[q]
   else:w=V[6]+PK[q]
   z+=w if v>0 else -w
  z+=30 if Ba>1 else 0
  z-=30 if Bb>1 else 0
- for i in range(64):
-  if s.b[i]==4:
-   f=i%8
-   if all(abs(s.b[f+k*8])!=1 for k in range(8)):z+=15
-  elif s.b[i]==-4:
-   f=i%8
-   if all(abs(s.b[f+k*8])!=1 for k in range(8)):z-=15
  return z*s.t if s.t>0 else -z
 def q(s,b):
  z=x(b)
@@ -184,7 +180,7 @@ def q1(s,b):
   b.u()
  return z
 class E:
- def __init__(s,bu=40000,dp=5):s.bu=bu;s.d=dp;s.n=0;s.k=[0]*12
+ def __init__(s,bu=50000,dp=5,tl=7):s.bu=bu;s.d=dp;s.n=0;s.k=[0]*12;s.tl=tl
  def o(s,b,mv,d):
   L=[]
   for f,t,pr in mv:
@@ -197,7 +193,7 @@ class E:
   L.sort();return[m for _,m in L]
  def s(s,b,d,a,be):
   s.n+=1
-  if s.n>s.bu:return x(b)
+  if s.n>s.bu or time.time()-s.t0>s.tl:return x(b)
   if b.ck():d+=1
   mv=b.g()
   if not mv:return -30000+(s.d-d) if b.ck() else 0
@@ -214,6 +210,7 @@ class E:
      s.k[d+1]=s.k[d];s.k[d]=m
   return a
  def b(s,b,legal=None):
+  s.t0=time.time()
   mv=b.g()
   if legal is not None:
    L=set(legal);mv=[m for m in mv if s.q(m) in L]
@@ -245,5 +242,5 @@ def run(url,e):
    g=json.load(U.urlopen(U.Request(url+'/move',data=json.dumps({'game':g['game'],'move':e.q(mv)}).encode(),headers=H)))
   if g['status']=='done':break
 if __name__=='__main__':
- e=E(int(os.environ.get('ENGINE_BUDGET','40000')),int(os.environ.get('ENGINE_DEPTH','5')))
+ e=E(int(os.environ.get('ENGINE_BUDGET','30000')),int(os.environ.get('ENGINE_DEPTH','5')))
  run(os.environ['MAKEFUN_ENV_URL'],e)
