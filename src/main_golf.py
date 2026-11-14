@@ -133,18 +133,30 @@ PR=[0,0,0,5,5,0,0,0,-5,0,0,0,0,0,0,-5,-5,0,0,0,0,0,0,-5,-5,0,0,0,0,0,0,-5,-5,0,0
 PQ=[-20,-10,-10,-5,-5,-10,-10,-20,-10,0,5,0,0,0,0,-10,-10,5,5,5,5,5,0,-10,0,0,5,5,5,5,0,-5,-5,0,5,5,5,5,0,-5,-10,0,5,5,5,5,0,-10,-10,0,0,0,0,0,0,-10,-20,-10,-10,-5,-5,-10,-10,-20]
 PK=[-30,-40,-40,-50,-50,-40,-40,-30,-30,-40,-40,-50,-50,-40,-40,-30,-30,-40,-40,-50,-50,-40,-40,-30,-30,-40,-40,-50,-50,-40,-40,-30,-20,-30,-30,-40,-40,-30,-30,-20,-10,-20,-20,-20,-20,-20,-20,-10,20,20,0,0,0,0,20,20,20,30,10,0,0,10,30,20]
 def x(s):
- z=0
+ z=0;Ba=0;Bb=0
  for i in range(64):
   v=s.b[i]
   if not v:continue
   p=abs(v);q=i if v>0 else i^56
   if p==1:w=V[1]+PT[q]
   elif p==2:w=V[2]+PN[q]
-  elif p==3:w=V[3]+PB[q]
+  elif p==3:
+   w=V[3]+PB[q]
+   if v>0:Ba+=1
+   else:Bb+=1
   elif p==4:w=V[4]+PR[q]
   elif p==5:w=V[5]+PQ[q]
   else:w=V[6]+PK[q]
   z+=w if v>0 else -w
+ z+=30 if Ba>1 else 0
+ z-=30 if Bb>1 else 0
+ for i in range(64):
+  if s.b[i]==4:
+   f=i%8
+   if all(abs(s.b[f+k*8])!=1 for k in range(8)):z+=15
+  elif s.b[i]==-4:
+   f=i%8
+   if all(abs(s.b[f+k*8])!=1 for k in range(8)):z-=15
  return z*s.t if s.t>0 else -z
 def q(s,b):
  z=x(b)
@@ -172,7 +184,7 @@ def q1(s,b):
   b.u()
  return z
 class E:
- def __init__(s,bu=30000,dp=5):s.bu=bu;s.d=dp;s.n=0;s.k=[0]*12
+ def __init__(s,bu=50000,dp=5):s.bu=bu;s.d=dp;s.n=0;s.k=[0]*12;s.h={}
  def o(s,b,mv,d):
   L=[]
   for f,t,pr in mv:
@@ -186,6 +198,12 @@ class E:
  def s(s,b,d,a,be):
   s.n+=1
   if s.n>s.bu:return x(b)
+  k=(bytes(v&7 for v in b.b),b.t,b.c,b.e)
+  v=s.h.get(k)
+  if v is not None and v[1]>=d:
+   if v[2]==0:return v[0]
+   if v[2]==1 and v[0]>=be:return v[0]
+   if v[2]==2 and v[0]<=a:return v[0]
   if b.ck():d+=1
   mv=b.g()
   if not mv:return -30000+(s.d-d) if b.ck() else 0
@@ -195,11 +213,14 @@ class E:
    b.m(m)
    if b.ck(-b.t):b.u();continue
    z=-s.s(b,d-1,-be,-a);b.u()
-   if z>=be:return be
+   if z>=be:
+    if len(s.h)<12000:s.h[k]=(be,d,1)
+    return be
    if z>a:
     a=z
     if not tmp and not m[2] and m!=s.k[d]:
      s.k[d+1]=s.k[d];s.k[d]=m
+  if len(s.h)<12000:s.h[k]=(a,d,0)
   return a
  def b(s,b,legal=None):
   mv=b.g()
