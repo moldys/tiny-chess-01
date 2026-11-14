@@ -162,6 +162,7 @@ def q(s,b):
    if b.b[t] and not pr and z-V[abs(b.b[t])]>200:continue
    m.append((f,t,pr))
  for f,t,pr in m:
+  if time.time()-s.t0>s.tl:return z
   b.m((f,t,pr))
   if b.ck(-b.t):b.u();continue
   w=-q1(s,b)
@@ -173,6 +174,7 @@ def q1(s,b):
  for f,t,pr in b.g():
   if not b.b[t] and not pr:continue
   if b.b[t] and not pr and z-V[abs(b.b[t])]>200:continue
+  if time.time()-s.t0>s.tl:return z
   b.m((f,t,pr))
   if b.ck(-b.t):b.u();continue
   w=-x(b)
@@ -198,6 +200,11 @@ class E:
   mv=b.g()
   if not mv:return -30000+(s.d-d) if b.ck() else 0
   if d<=0:return q(s,b)
+  if d>=3 and not b.ck() and a>-9900:
+   b.t=-b.t
+   z=-s.s(b,d-3,-be,-be+1)
+   b.t=-b.t
+   if z>=be:return be
   for m in s.o(b,mv,d):
    tmp=b.b[m[1]]
    b.m(m)
