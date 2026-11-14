@@ -151,6 +151,13 @@ def x(s):
   elif p==5:w=V[5]+PQ[q]
   else:w=V[6]+PK[q]
   z+=w if v>0 else -w
+  if p in(2,3,4,5):
+   en=-1 if v>0 else 1
+   for dd in(7,9):
+    j=i+dd*en
+    if 0<=j<64 and abs(j%8-i%8)==1 and s.b[j]==en:
+     z-=V[p]//2 if v>0 else -V[p]//2
+     break
  z+=30 if Ba>1 else 0
  z-=30 if Bb>1 else 0
  return z*s.t if s.t>0 else -z
@@ -187,7 +194,7 @@ def q1(s,b):
   b.u()
  return z
 class E:
- def __init__(s,bu=50000,dp=5,tl=7):s.bu=bu;s.d=dp;s.n=0;s.k=[0]*12;s.tl=tl
+ def __init__(s,bu=50000,dp=5,tl=7):s.bu=bu;s.d=dp;s.n=0;s.k=[0]*12;s.tl=tl;s.h=[[0]*64 for _ in range(64)]
  def o(s,b,mv,d):
   L=[]
   for f,t,pr in mv:
@@ -196,6 +203,7 @@ class E:
    elif pr:sc=900+V[pr]
    elif b.b[f]==1 and t==b.e:sc=100
    elif (f,t,pr)==s.k[d] or (f,t,pr)==s.k[d+1]:sc-=60
+   sc-=s.h[f][t]//16
    L.append((-sc,(f,t,pr)))
   L.sort();return[m for _,m in L]
  def s(s,b,d,a,be):
@@ -215,7 +223,9 @@ class E:
    b.m(m)
    if b.ck(-b.t):b.u();continue
    z=-s.s(b,d-1,-be,-a);b.u()
-   if z>=be:return be
+   if z>=be:
+    s.h[m[0]][m[1]]+=d*d
+    return be
    if z>a:
     a=z
     if not tmp and not m[2] and m!=s.k[d]:
