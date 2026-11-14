@@ -194,7 +194,7 @@ def q1(s,b):
   b.u()
  return z
 class E:
- def __init__(s,bu=50000,dp=5,tl=7):s.bu=bu;s.d=dp;s.n=0;s.k=[0]*12;s.tl=tl;s.h=[[0]*64 for _ in range(64)]
+ def __init__(s,bu=50000,dp=5,tl=7):s.bu=bu;s.d=dp;s.n=0;s.k=[0]*12;s.tl=tl;s.h=[[0]*64 for _ in range(64)];s.pv=[0]*12
  def o(s,b,mv,d):
   L=[]
   for f,t,pr in mv:
@@ -203,6 +203,7 @@ class E:
    elif pr:sc=900+V[pr]
    elif b.b[f]==1 and t==b.e:sc=100
    elif (f,t,pr)==s.k[d] or (f,t,pr)==s.k[d+1]:sc-=60
+   elif (f,t,pr)==s.pv[d]:sc-=80
    sc-=s.h[f][t]//16
    L.append((-sc,(f,t,pr)))
   L.sort();return[m for _,m in L]
@@ -218,16 +219,20 @@ class E:
    z=-s.s(b,d-3,-be,-be+1)
    b.t=-b.t
    if z>=be:return be
-  for m in s.o(b,mv,d):
+  for i,m in enumerate(s.o(b,mv,d)):
    tmp=b.b[m[1]]
    b.m(m)
    if b.ck(-b.t):b.u();continue
-   z=-s.s(b,d-1,-be,-a);b.u()
+   if d>=3 and i>=4 and not tmp and not m[2] and a>-9900:
+    z=-s.s(b,d-2,-be,-a)
+    if z>a:z=-s.s(b,d-1,-be,-a)
+   else:z=-s.s(b,d-1,-be,-a)
+   b.u()
    if z>=be:
     s.h[m[0]][m[1]]+=d*d
     return be
    if z>a:
-    a=z
+    a=z;s.pv[d]=m
     if not tmp and not m[2] and m!=s.k[d]:
      s.k[d+1]=s.k[d];s.k[d]=m
   return a
