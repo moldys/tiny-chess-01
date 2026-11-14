@@ -140,7 +140,6 @@ def x(s):
   p=abs(v);q=i if v>0 else i^56
   if p==1:
    w=V[1]+PT[q]
-   w+=(q//8)*4 if v>0 else (7-q//8)*4
    if v>0:cw[q%8]+=1
    else:cb[q%8]+=1
   elif p==2:w=V[2]+PN[q]
