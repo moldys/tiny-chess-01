@@ -179,7 +179,7 @@ class E:
   L.sort();return[m for _,m in L]
  def s(s,b,d,a,be):
   s.n+=1
-  if s.n>s.bu:return x(b)*b.t
+  if s.n>s.bu:return x(b)
   if b.ck():d+=1
   mv=b.g()
   if not mv:return -30000+(s.d-d) if b.ck() else 0
