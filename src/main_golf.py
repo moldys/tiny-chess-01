@@ -184,7 +184,7 @@ def q1(s,b):
   b.u()
  return z
 class E:
- def __init__(s,bu=50000,dp=5):s.bu=bu;s.d=dp;s.n=0;s.k=[0]*12;s.h={}
+ def __init__(s,bu=30000,dp=5):s.bu=bu;s.d=dp;s.n=0;s.k=[0]*12;s.h={}
  def o(s,b,mv,d):
   L=[]
   for f,t,pr in mv:
