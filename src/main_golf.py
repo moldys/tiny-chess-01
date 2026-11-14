@@ -150,7 +150,9 @@ def q(s,b):
  z=x(b)
  m=[]
  for f,t,pr in b.g():
-  if b.b[t] or pr:m.append((f,t,pr))
+  if b.b[t] or pr:
+   if b.b[t] and not pr and z-V[abs(b.b[t])]>200:continue
+   m.append((f,t,pr))
  for f,t,pr in m:
   b.m((f,t,pr))
   if b.ck(-b.t):b.u();continue
@@ -162,6 +164,7 @@ def q1(s,b):
  z=x(b)
  for f,t,pr in b.g():
   if not b.b[t] and not pr:continue
+  if b.b[t] and not pr and z-V[abs(b.b[t])]>200:continue
   b.m((f,t,pr))
   if b.ck(-b.t):b.u();continue
   w=-x(b)
