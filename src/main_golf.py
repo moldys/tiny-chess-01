@@ -161,6 +161,7 @@ def q(s,b):
   if b.b[t] or pr:
    if b.b[t] and not pr and z-V[abs(b.b[t])]>200:continue
    m.append((f,t,pr))
+ m.sort(key=lambda x:-V[abs(b.b[x[1]])]);m=m[:8]
  for f,t,pr in m:
   if time.time()-s.t0>s.tl:return z
   b.m((f,t,pr))
@@ -171,9 +172,13 @@ def q(s,b):
  return z
 def q1(s,b):
  z=x(b)
+ C=[]
  for f,t,pr in b.g():
   if not b.b[t] and not pr:continue
   if b.b[t] and not pr and z-V[abs(b.b[t])]>200:continue
+  C.append((f,t,pr))
+ C.sort(key=lambda x:-V[abs(b.b[x[1]])]);C=C[:8]
+ for f,t,pr in C:
   if time.time()-s.t0>s.tl:return z
   b.m((f,t,pr))
   if b.ck(-b.t):b.u();continue
@@ -224,15 +229,16 @@ class E:
   if not mv:return None
   bm=None;fl=0
   for d in range(1,s.d+1):
-   s.n=0;a=-1e9;be=1e9;cur=None;cs=-1e9
+   s.n=0;a=-1e9;be=1e9;cur=None;cs=-1e9;ok=1
    for m in s.o(b,mv,0):
     b.m(m)
     if b.ck(-b.t):b.u();continue
     fl=1;z=-s.s(b,d-1,-be,-a);b.u()
     if z>cs:cs=z;cur=m
     if cs>a:a=cs
-   if cur is not None:bm=cur
-   if s.n>s.bu:break
+    if time.time()-s.t0>s.tl:ok=0;break
+   if ok and cur is not None:bm=cur
+   if s.n>s.bu or time.time()-s.t0>s.tl:break
   return None if not fl else bm
  def q(s,m):
   f,t,pr=m
