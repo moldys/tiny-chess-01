@@ -184,7 +184,7 @@ def q1(s,b):
   b.u()
  return z
 class E:
- def __init__(s,bu=30000,dp=5):s.bu=bu;s.d=dp;s.n=0;s.k=[0]*12;s.h={}
+ def __init__(s,bu=40000,dp=5):s.bu=bu;s.d=dp;s.n=0;s.k=[0]*12
  def o(s,b,mv,d):
   L=[]
   for f,t,pr in mv:
@@ -198,12 +198,6 @@ class E:
  def s(s,b,d,a,be):
   s.n+=1
   if s.n>s.bu:return x(b)
-  k=(bytes(v&7 for v in b.b),b.t,b.c,b.e)
-  v=s.h.get(k)
-  if v is not None and v[1]>=d:
-   if v[2]==0:return v[0]
-   if v[2]==1 and v[0]>=be:return v[0]
-   if v[2]==2 and v[0]<=a:return v[0]
   if b.ck():d+=1
   mv=b.g()
   if not mv:return -30000+(s.d-d) if b.ck() else 0
@@ -213,14 +207,11 @@ class E:
    b.m(m)
    if b.ck(-b.t):b.u();continue
    z=-s.s(b,d-1,-be,-a);b.u()
-   if z>=be:
-    if len(s.h)<12000:s.h[k]=(be,d,1)
-    return be
+   if z>=be:return be
    if z>a:
     a=z
     if not tmp and not m[2] and m!=s.k[d]:
      s.k[d+1]=s.k[d];s.k[d]=m
-  if len(s.h)<12000:s.h[k]=(a,d,0)
   return a
  def b(s,b,legal=None):
   mv=b.g()
@@ -254,5 +245,5 @@ def run(url,e):
    g=json.load(U.urlopen(U.Request(url+'/move',data=json.dumps({'game':g['game'],'move':e.q(mv)}).encode(),headers=H)))
   if g['status']=='done':break
 if __name__=='__main__':
- e=E(int(os.environ.get('ENGINE_BUDGET','30000')),int(os.environ.get('ENGINE_DEPTH','5')))
+ e=E(int(os.environ.get('ENGINE_BUDGET','40000')),int(os.environ.get('ENGINE_DEPTH','5')))
  run(os.environ['MAKEFUN_ENV_URL'],e)
