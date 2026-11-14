@@ -169,14 +169,15 @@ def q1(s,b):
   b.u()
  return z
 class E:
- def __init__(s,bu=20000,dp=5):s.bu=bu;s.d=dp;s.n=0
- def o(s,b,mv):
+ def __init__(s,bu=30000,dp=5):s.bu=bu;s.d=dp;s.n=0;s.k=[0]*12
+ def o(s,b,mv,d):
   L=[]
   for f,t,pr in mv:
    sc=0;vic=b.b[t]
    if vic:sc=10*V[abs(vic)]-V[abs(b.b[f])]
    elif pr:sc=900+V[pr]
    elif b.b[f]==1 and t==b.e:sc=100
+   elif (f,t,pr)==s.k[d] or (f,t,pr)==s.k[d+1]:sc-=60
    L.append((-sc,(f,t,pr)))
   L.sort();return[m for _,m in L]
  def s(s,b,d,a,be):
@@ -186,12 +187,16 @@ class E:
   mv=b.g()
   if not mv:return -30000+(s.d-d) if b.ck() else 0
   if d<=0:return q(s,b)
-  for m in s.o(b,mv):
+  for m in s.o(b,mv,d):
+   tmp=b.b[m[1]]
    b.m(m)
    if b.ck(-b.t):b.u();continue
    z=-s.s(b,d-1,-be,-a);b.u()
    if z>=be:return be
-   if z>a:a=z
+   if z>a:
+    a=z
+    if not tmp and not m[2] and m!=s.k[d]:
+     s.k[d+1]=s.k[d];s.k[d]=m
   return a
  def b(s,b,legal=None):
   mv=b.g()
@@ -201,7 +206,7 @@ class E:
   bm=None;fl=0
   for d in range(1,s.d+1):
    s.n=0;a=-1e9;be=1e9;cur=None;cs=-1e9
-   for m in s.o(b,mv):
+   for m in s.o(b,mv,0):
     b.m(m)
     if b.ck(-b.t):b.u();continue
     fl=1;z=-s.s(b,d-1,-be,-a);b.u()
@@ -225,5 +230,5 @@ def run(url,e):
    g=json.load(U.urlopen(U.Request(url+'/move',data=json.dumps({'game':g['game'],'move':e.q(mv)}).encode(),headers=H)))
   if g['status']=='done':break
 if __name__=='__main__':
- e=E(int(os.environ.get('ENGINE_BUDGET','20000')),int(os.environ.get('ENGINE_DEPTH','5')))
+ e=E(int(os.environ.get('ENGINE_BUDGET','30000')),int(os.environ.get('ENGINE_DEPTH','5')))
  run(os.environ['MAKEFUN_ENV_URL'],e)
