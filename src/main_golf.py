@@ -133,12 +133,15 @@ PR=[0,0,0,5,5,0,0,0,-5,0,0,0,0,0,0,-5,-5,0,0,0,0,0,0,-5,-5,0,0,0,0,0,0,-5,-5,0,0
 PQ=[-20,-10,-10,-5,-5,-10,-10,-20,-10,0,5,0,0,0,0,-10,-10,5,5,5,5,5,0,-10,0,0,5,5,5,5,0,-5,-5,0,5,5,5,5,0,-5,-10,0,5,5,5,5,0,-10,-10,0,0,0,0,0,0,-10,-20,-10,-10,-5,-5,-10,-10,-20]
 PK=[-30,-40,-40,-50,-50,-40,-40,-30,-30,-40,-40,-50,-50,-40,-40,-30,-30,-40,-40,-50,-50,-40,-40,-30,-30,-40,-40,-50,-50,-40,-40,-30,-20,-30,-30,-40,-40,-30,-30,-20,-10,-20,-20,-20,-20,-20,-20,-10,20,20,0,0,0,0,20,20,20,30,10,0,0,10,30,20]
 def x(s):
- z=0;Ba=0;Bb=0
+ z=0;Ba=0;Bb=0;cw=[0]*8;cb=[0]*8
  for i in range(64):
   v=s.b[i]
   if not v:continue
   p=abs(v);q=i if v>0 else i^56
-  if p==1:w=V[1]+PT[q]
+  if p==1:
+   w=V[1]+PT[q]
+   if v>0:cw[q%8]+=1
+   else:cb[q%8]+=1
   elif p==2:w=V[2]+PN[q]
   elif p==3:
    w=V[3]+PB[q]
@@ -160,6 +163,11 @@ def x(s):
      break
  z+=30 if Ba>1 else 0
  z-=30 if Bb>1 else 0
+ for k in range(8):
+  if cw[k]>1:z-=15*(cw[k]-1)
+  if cb[k]>1:z+=15*(cb[k]-1)
+  if cw[k] and not(cw[k-1] if k>0 else 0) and not(cw[k+1] if k<7 else 0):z-=12
+  if cb[k] and not(cb[k-1] if k>0 else 0) and not(cb[k+1] if k<7 else 0):z+=12
  return z*s.t if s.t>0 else -z
 def q(s,b):
  z=x(b)
@@ -226,7 +234,10 @@ class E:
    if d>=3 and i>=4 and not tmp and not m[2] and a>-9900:
     z=-s.s(b,d-2,-be,-a)
     if z>a:z=-s.s(b,d-1,-be,-a)
-   else:z=-s.s(b,d-1,-be,-a)
+   elif i==0:z=-s.s(b,d-1,-be,-a)
+   else:
+    z=-s.s(b,d-1,-a-1,-a)
+    if z>a and z<be:z=-s.s(b,d-1,-be,-a)
    b.u()
    if z>=be:
     s.h[m[0]][m[1]]+=d*d
