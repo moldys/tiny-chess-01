@@ -133,7 +133,7 @@ PR=[0,0,0,5,5,0,0,0,-5,0,0,0,0,0,0,-5,-5,0,0,0,0,0,0,-5,-5,0,0,0,0,0,0,-5,-5,0,0
 PQ=[-20,-10,-10,-5,-5,-10,-10,-20,-10,0,5,0,0,0,0,-10,-10,5,5,5,5,5,0,-10,0,0,5,5,5,5,0,-5,-5,0,5,5,5,5,0,-5,-10,0,5,5,5,5,0,-10,-10,0,0,0,0,0,0,-10,-20,-10,-10,-5,-5,-10,-10,-20]
 PK=[-30,-40,-40,-50,-50,-40,-40,-30,-30,-40,-40,-50,-50,-40,-40,-30,-30,-40,-40,-50,-50,-40,-40,-30,-30,-40,-40,-50,-50,-40,-40,-30,-20,-30,-30,-40,-40,-30,-30,-20,-10,-20,-20,-20,-20,-20,-20,-10,20,20,0,0,0,0,20,20,20,30,10,0,0,10,30,20]
 def x(s):
- z=0;Ba=0;Bb=0;cw=[0]*8;cb=[0]*8;wk=-99;bk=-99
+ z=0;Ba=0;Bb=0;cw=[0]*8;cb=[0]*8
  for i in range(64):
   v=s.b[i]
   if not v:continue
@@ -153,10 +153,7 @@ def x(s):
    if all(abs(s.b[f+k*8])!=1 for k in range(8)):w+=15 if v>0 else -15
    if (v>0 and i//8==6) or (v<0 and i//8==1):w+=20 if v>0 else -20
   elif p==5:w=V[5]+PQ[q]
-  else:
-   w=V[6]+PK[q]
-   if v>0:wk=i
-   else:bk=i
+  else:w=V[6]+PK[q]
   z+=w if v>0 else -w
   if p>=4:
    en=-1 if v>0 else 1
@@ -165,22 +162,6 @@ def x(s):
     if 0<=j<64 and abs(j%8-i%8)==1 and s.b[j]==en:
      z-=V[p]//2 if v>0 else -V[p]//2
      break
- for i in range(64):
-  v=s.b[i]
-  if abs(v)!=1:continue
-  f=i%8;rr=i//8;en=-1 if v>0 else 1;pr=1
-  for k in range(rr+en, 8 if en>0 else -1, en):
-   for ff in(f-1,f,f+1):
-    if 0<=ff<8 and s.b[k*8+ff]==en:pr=0
-    if not pr:break
-   if not pr:break
-  if pr:z+=20 if v>0 else -20
- if wk>=0:
-  for i in range(64):
-   v=s.b[i]
-   if not v or abs(v)==6:continue
-   if v<0:d=max(abs(i//8-wk//8),abs(i%8-wk%8));z-=14-d
-   else:d=max(abs(i//8-bk//8),abs(i%8-bk%8));z+=14-d
  z+=30 if Ba>1 else 0
  z-=30 if Bb>1 else 0
  for k in range(8):
@@ -222,7 +203,7 @@ def q1(s,b):
   b.u()
  return z
 class E:
- def __init__(s,bu=60000,dp=5,tl=5):s.bu=bu;s.d=dp;s.n=0;s.k=[0]*12;s.tl=tl;s.h=[[0]*64 for _ in range(64)];s.pv=[0]*12
+ def __init__(s,bu=100000,dp=5,tl=7):s.bu=bu;s.d=dp;s.n=0;s.k=[0]*12;s.tl=tl;s.h=[[0]*64 for _ in range(64)];s.pv=[0]*12
  def o(s,b,mv,d):
   L=[]
   for f,t,pr in mv:
@@ -301,5 +282,5 @@ def run(url,e):
    g=json.load(U.urlopen(U.Request(url+'/move',data=json.dumps({'game':g['game'],'move':e.q(mv)}).encode(),headers=H)))
   if g['status']=='done':break
 if __name__=='__main__':
- e=E(int(os.environ.get('ENGINE_BUDGET','60000')),int(os.environ.get('ENGINE_DEPTH','5')),int(os.environ.get('ENGINE_TIME','5')))
+ e=E(int(os.environ.get('ENGINE_BUDGET','100000')),int(os.environ.get('ENGINE_DEPTH','5')))
  run(os.environ['MAKEFUN_ENV_URL'],e)
