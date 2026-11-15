@@ -222,7 +222,7 @@ def q1(s,b):
   b.u()
  return z
 class E:
- def __init__(s,bu=100000,dp=5,tl=7):s.bu=bu;s.d=dp;s.n=0;s.k=[0]*12;s.tl=tl;s.h=[[0]*64 for _ in range(64)];s.pv=[0]*12
+ def __init__(s,bu=100000,dp=5,tl=3):s.bu=bu;s.d=dp;s.n=0;s.k=[0]*12;s.tl=tl;s.h=[[0]*64 for _ in range(64)];s.pv=[0]*12
  def o(s,b,mv,d):
   L=[]
   for f,t,pr in mv:
@@ -301,5 +301,5 @@ def run(url,e):
    g=json.load(U.urlopen(U.Request(url+'/move',data=json.dumps({'game':g['game'],'move':e.q(mv)}).encode(),headers=H)))
   if g['status']=='done':break
 if __name__=='__main__':
- e=E(int(os.environ.get('ENGINE_BUDGET','100000')),int(os.environ.get('ENGINE_DEPTH','5')))
+ e=E(int(os.environ.get('ENGINE_BUDGET','100000')),int(os.environ.get('ENGINE_DEPTH','5')),int(os.environ.get('ENGINE_TIME','3')))
  run(os.environ['MAKEFUN_ENV_URL'],e)
